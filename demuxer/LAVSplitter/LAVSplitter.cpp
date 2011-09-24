@@ -111,11 +111,11 @@ STDMETHODIMP CLAVSplitter::Close()
 static BOOL get_iformat_default(std::string name)
 {
   // Raw video formats lack timestamps..
-  if (name == "rawvideo") {
-    return FALSE;
+  if (name == "flac" || name == "flv" || name == "mp4" || name == "mpegts" || name == "amr") {
+    return TRUE;
   }
 
-  return TRUE;
+  return FALSE;
 }
 
 STDMETHODIMP CLAVSplitter::LoadDefaults()

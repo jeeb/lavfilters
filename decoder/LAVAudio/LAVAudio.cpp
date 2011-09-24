@@ -164,13 +164,12 @@ HRESULT CLAVAudio::LoadDefaults()
   m_settings.DRCEnabled = FALSE;
   m_settings.DRCLevel   = 100;
 
-  // Default all Codecs to enabled
+  // Default all Codecs to disabled
   for(int i = 0; i < Codec_NB; ++i)
-    m_settings.bFormats[i] = true;
+    m_settings.bFormats[i] = false;
 
-  // Disable WMA codecs by default
-  m_settings.bFormats[Codec_WMA2] = false;
-  m_settings.bFormats[Codec_WMAPRO] = false;
+  // Enable needed formats
+  m_settings.bFormats[Codec_DTS] = true;
 
   // Default bitstreaming to disabled
   memset(m_settings.bBitstream, 0, sizeof(m_settings.bBitstream));

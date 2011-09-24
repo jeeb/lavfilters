@@ -108,14 +108,26 @@ HRESULT CLAVVideo::LoadDefaults()
   m_settings.RGBRange = 2; // Full range default
 
   for (int i = 0; i < Codec_NB; ++i)
-    m_settings.bFormats[i] = TRUE;
+    m_settings.bFormats[i] = FALSE;
 
-  m_settings.bFormats[Codec_VC1]      = FALSE;
-  m_settings.bFormats[Codec_RV12]     = FALSE;
-  m_settings.bFormats[Codec_Lagarith] = FALSE;
-  m_settings.bFormats[Codec_Cinepak]  = FALSE;
-  m_settings.bFormats[Codec_QPEG]     = FALSE;
-  m_settings.bFormats[Codec_MSRLE]    = FALSE;
+  m_settings.bFormats[Codec_H264]    = TRUE;
+  m_settings.bFormats[Codec_MPEG4]   = TRUE;
+  m_settings.bFormats[Codec_MSMPEG4] = TRUE;
+  m_settings.bFormats[Codec_VP8]     = TRUE;
+  m_settings.bFormats[Codec_MJPEG]   = TRUE;
+  m_settings.bFormats[Codec_Theora]  = TRUE;
+  m_settings.bFormats[Codec_FLV1]    = TRUE;
+  m_settings.bFormats[Codec_VP6]     = TRUE;
+  m_settings.bFormats[Codec_SVQ]     = TRUE;
+  m_settings.bFormats[Codec_H261]    = TRUE;
+  m_settings.bFormats[Codec_H263]    = TRUE;
+  m_settings.bFormats[Codec_Indeo]   = TRUE;
+  m_settings.bFormats[Codec_HuffYUV] = TRUE;
+  m_settings.bFormats[Codec_QTRle]   = TRUE;
+  m_settings.bFormats[Codec_RV34]    = TRUE;
+  m_settings.bFormats[Codec_ZLIB]    = TRUE;
+  m_settings.bFormats[Codec_PNG]     = TRUE;
+  m_settings.bFormats[Codec_ProRes]  = TRUE;
 
   for (int i = 0; i < LAVOutPixFmt_NB; ++i)
     m_settings.bPixFmts[i] = TRUE;
