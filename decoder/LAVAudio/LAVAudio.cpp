@@ -230,7 +230,7 @@ HRESULT CLAVAudio::LoadDefaults()
   m_settings.AudioDelayEnabled = FALSE;
   m_settings.AudioDelay = 0;
 
-  m_settings.MixingEnabled = FALSE;
+  m_settings.MixingEnabled = TRUE;
   m_settings.MixingLayout  = AV_CH_LAYOUT_STEREO;
   m_settings.MixingFlags   = LAV_MIXING_FLAG_CLIP_PROTECTION;
   m_settings.MixingMode    = MatrixEncoding_None;
