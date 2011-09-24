@@ -160,6 +160,13 @@ HRESULT CLAVVideo::LoadDefaults()
   m_settings.bFormats[Codec_QPEG]     = FALSE;
   m_settings.bFormats[Codec_MSRLE]    = FALSE;
 
+  // We disable formats that MS can decode by itself in CCCP
+  m_settings.bFormats[Codec_VC1]      = FALSE;
+  m_settings.bFormats[Codec_MPEG1]    = FALSE;
+  m_settings.bFormats[Codec_WMV3]     = FALSE;
+  m_settings.bFormats[Codec_WMV12]    = FALSE;
+  m_settings.bFormats[Codec_MSVideo1] = FALSE;
+
   m_settings.bDVDVideo  = TRUE;
   m_settings.bMSWMV9DMO = TRUE;
 
