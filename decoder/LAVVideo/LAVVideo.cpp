@@ -175,13 +175,46 @@ HRESULT CLAVVideo::LoadDefaults()
   m_settings.DeintMode = DeintMode_Auto;
   m_settings.RGBRange = 2; // Full range default
 
+  // By default set all video codecs to off
   for (int i = 0; i < Codec_VideoNB; ++i)
-    m_settings.bFormats[i] = TRUE;
+    m_settings.bFormats[i] = FALSE;
 
-  m_settings.bFormats[Codec_RV12]     = FALSE;
-  m_settings.bFormats[Codec_Cinepak]  = FALSE;
-  m_settings.bFormats[Codec_QPEG]     = FALSE;
-  m_settings.bFormats[Codec_MSRLE]    = FALSE;
+  // Set enabled formats to enabled
+  m_settings.bFormats[Codec_H264]     = TRUE;
+  m_settings.bFormats[Codec_MPEG2]    = TRUE;
+  m_settings.bFormats[Codec_MPEG4]    = TRUE;
+  m_settings.bFormats[Codec_MSMPEG4]  = TRUE;
+  m_settings.bFormats[Codec_VP8]      = TRUE;
+  m_settings.bFormats[Codec_MJPEG]    = TRUE;
+  m_settings.bFormats[Codec_Theora]   = TRUE;
+  m_settings.bFormats[Codec_FLV1]     = TRUE;
+  m_settings.bFormats[Codec_VP6]      = TRUE;
+  m_settings.bFormats[Codec_SVQ]      = TRUE;
+  m_settings.bFormats[Codec_H261]     = TRUE;
+  m_settings.bFormats[Codec_H263]     = TRUE;
+  m_settings.bFormats[Codec_Indeo]    = TRUE;
+  m_settings.bFormats[Codec_TSCC]     = TRUE;
+  m_settings.bFormats[Codec_Fraps]    = TRUE;
+  m_settings.bFormats[Codec_HuffYUV]  = TRUE;
+  m_settings.bFormats[Codec_QTRle]    = TRUE;
+  m_settings.bFormats[Codec_DV]       = TRUE;
+  m_settings.bFormats[Codec_Bink]     = TRUE;
+  m_settings.bFormats[Codec_Smacker]  = TRUE;
+  m_settings.bFormats[Codec_RV34]     = TRUE;
+  m_settings.bFormats[Codec_ZLIB]     = TRUE;
+  m_settings.bFormats[Codec_PNG]      = TRUE;
+  m_settings.bFormats[Codec_ProRes]   = TRUE;
+  m_settings.bFormats[Codec_UtVideo]  = TRUE;
+  m_settings.bFormats[Codec_Dirac]    = TRUE;
+  m_settings.bFormats[Codec_DNxHD]    = TRUE;
+  m_settings.bFormats[Codec_8BPS]     = TRUE;
+  m_settings.bFormats[Codec_LOCO]     = TRUE;
+  m_settings.bFormats[Codec_Snow]     = TRUE;
+  m_settings.bFormats[Codec_FFV1]     = TRUE;
+  m_settings.bFormats[Codec_JPEG2000] = TRUE;
+  m_settings.bFormats[Codec_VMNC]     = TRUE;
+  m_settings.bFormats[Codec_FLIC]     = TRUE;
+  m_settings.bFormats[Codec_G2M]      = TRUE;
 
   m_settings.bDVDVideo  = TRUE;
   m_settings.bMSWMV9DMO = TRUE;
