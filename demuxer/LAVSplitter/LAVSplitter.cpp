@@ -150,11 +150,12 @@ STDMETHODIMP CLAVSplitter::JoinFilterGraph(IFilterGraph * pGraph, LPCWSTR pName)
 static BOOL get_iformat_default(std::string name)
 {
   // Raw video formats lack timestamps..
-  if (name == "rawvideo") {
-    return FALSE;
+  if (name == "flac" || name == "flv" || name == "mp4" || name == "mpegts" || name == "amr" ||
+      name == "ogg" || name == "rm" || name == "rtp" || name == "rtsp") {
+    return TRUE;
   }
 
-  return TRUE;
+  return FALSE;
 }
 
 STDMETHODIMP CLAVSplitter::LoadDefaults()
