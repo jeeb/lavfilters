@@ -133,12 +133,18 @@ STDMETHODIMP CLAVSplitter::JoinFilterGraph(IFilterGraph * pGraph, LPCWSTR pName)
 // Default overrides for input formats
 static BOOL get_iformat_default(std::string name)
 {
+  // Let's try a new way of blacklisting stuff we should not be touching
+  if (name == "asf" || name == "avi" || name == "mp3" || name == "mpeg" || name == "wav" ||
+      name == "wtv") {
+    return FALSE;
+  }
+
   return TRUE;
 }
 
 STDMETHODIMP CLAVSplitter::LoadDefaults()
 {
-  m_settings.TrayIcon         = FALSE;
+  m_settings.TrayIcon         = TRUE;
 
   m_settings.prefAudioLangs   = L"";
   m_settings.prefSubLangs     = L"";
