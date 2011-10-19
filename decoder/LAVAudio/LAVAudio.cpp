@@ -169,7 +169,7 @@ HRESULT CLAVAudio::LoadDefaults()
     m_settings.bFormats[i] = false;
 
   // Enable needed formats
-  m_settings.bFormats[Codec_DTS] = true;
+  // m_settings.bFormats[Codec_DTS] = true;
 
   // Default bitstreaming to disabled
   memset(m_settings.bBitstream, 0, sizeof(m_settings.bBitstream));
