@@ -120,7 +120,7 @@ public:
   STDMETHODIMP get_MoreInfoBannerURL(BSTR *pbstrMoreInfoBannerURL) { return E_NOTIMPL; }
   STDMETHODIMP get_MoreInfoText(BSTR *pbstrMoreInfoText) { return E_NOTIMPL; }
 
-  STDMETHODIMP OpenInputStream(AVIOContext *byteContext, LPCOLESTR pszFileName = NULL, const char *format = NULL);
+  STDMETHODIMP OpenInputStream(AVIOContext *byteContext, LPCOLESTR pszFileName = NULL, const char *format = NULL, bool openall = false);
   STDMETHODIMP SeekByte(int64_t pos, int flags);
 
   AVStream* GetAVStreamByPID(int pid);
@@ -135,7 +135,7 @@ public:
 private:
   STDMETHODIMP AddStream(int streamId);
   STDMETHODIMP CreateStreams();
-  STDMETHODIMP InitAVFormat(LPCOLESTR pszFileName);
+  STDMETHODIMP InitAVFormat(LPCOLESTR pszFileName, bool openall = false);
   void CleanupAVFormat();
   void UpdateParserFlags(AVStream *st);
 
