@@ -111,7 +111,7 @@ configure() (
 )
 
 build() (
-  make -j8
+  make -j4
 )
 
 echo Building ffmpeg in GCC ${arch} Release config...
