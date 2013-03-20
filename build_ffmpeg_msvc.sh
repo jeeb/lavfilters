@@ -87,12 +87,21 @@ configure() (
 )
 
 build() (
-  make -j8
+  make
 )
 
 echo Building ffmpeg in MSVC Debug config...
 
 make_dirs
+
+OLDLIB=${LIB}
+OLDINCLUDE=${INCLUDE}
+
+export LIB="C:\JEEB\msys\msvc-zlib\lib;${LIB}"
+export INCLUDE="C:\JEEB\msinttypes;C:\JEEB\msys\msvc-zlib\include;${INCLUDE}"
+
+echo "New lib: ${LIB}"
+echo "New include: ${INCLUDE}"
 
 cd ffmpeg
 
@@ -112,5 +121,8 @@ if ! $clean_build || [ ${CONFIGRETVAL} -eq 0 ]; then
   build &&
   copy_libs
 fi
+
+export LIB=${OLDLIB}
+export INCLUDE=${OLDINCLUDE}
 
 cd ..
