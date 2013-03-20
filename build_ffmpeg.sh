@@ -59,6 +59,7 @@ configure() (
     --enable-version3               \
     --enable-pthreads               \
     --disable-demuxer=matroska      \
+    --enable-avisynth               \
     --disable-filters               \
     --enable-filter=yadif           \
     --enable-filter=scale           \
@@ -69,6 +70,8 @@ configure() (
     --enable-protocol=mmst          \
     --enable-protocol=rtp           \
     --enable-protocol=http          \
+    --enable-protocol=rtmp          \
+    --enable-protocol=rtmpt         \
     --disable-muxers                \
     --enable-muxer=spdif            \
     --disable-hwaccels              \
@@ -107,7 +110,7 @@ configure() (
 )
 
 build() (
-  make -j8
+  make -j2
 )
 
 echo Building ffmpeg in GCC ${arch} Release config...
