@@ -71,6 +71,8 @@ configure() (
     --enable-protocol=rtp           \
     --enable-protocol=http          \
     --enable-protocol=crypto        \
+    --enable-protocol=rtmp          \
+    --enable-protocol=rtmpt         \
     --disable-muxers                \
     --enable-muxer=spdif            \
     --disable-hwaccels              \
@@ -111,7 +113,7 @@ configure() (
 )
 
 build() (
-  make -j8
+  make -j4
 )
 
 echo Building ffmpeg in GCC ${arch} Release config...
