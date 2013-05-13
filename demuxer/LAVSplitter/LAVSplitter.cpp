@@ -169,6 +169,7 @@ STDMETHODIMP CLAVSplitter::LoadDefaults()
 
   m_settings.subtitleMode     = LAVSubtitleMode_Default;
   m_settings.PGSForcedStream  = TRUE;
+  m_settings.PreferDefaultToVirtual = TRUE;
   m_settings.PGSOnlyForced    = FALSE;
 
   m_settings.vc1Mode          = 2;
@@ -228,6 +229,9 @@ STDMETHODIMP CLAVSplitter::ReadSettings(HKEY rootKey)
     bFlag = reg.ReadBOOL(L"PGSForcedStream", hr);
     if (SUCCEEDED(hr)) m_settings.PGSForcedStream = bFlag;
 
+    bFlag = reg.ReadBOOL(L"PreferDefaultToVirtual", hr);
+    if (SUCCEEDED(hr)) m_settings.PreferDefaultToVirtual = bFlag;
+
     bFlag = reg.ReadBOOL(L"PGSOnlyForced", hr);
     if (SUCCEEDED(hr)) m_settings.PGSOnlyForced = bFlag;
 
@@ -285,6 +289,7 @@ STDMETHODIMP CLAVSplitter::SaveSettings()
     reg.WriteString(L"subtitleAdvanced", m_settings.subtitleAdvanced.c_str());
     reg.WriteDWORD(L"subtitleMode", m_settings.subtitleMode);
     reg.WriteBOOL(L"PGSForcedStream", m_settings.PGSForcedStream);
+    reg.WriteBOOL(L"PreferDefaultToVirtual", m_settings.PreferDefaultToVirtual);
     reg.WriteBOOL(L"PGSOnlyForced", m_settings.PGSOnlyForced);
     reg.WriteDWORD(L"vc1TimestampMode", m_settings.vc1Mode);
     reg.WriteBOOL(L"substreams", m_settings.substreams);
@@ -1419,8 +1424,18 @@ std::list<CSubtitleSelector> CLAVSplitter::GetSubtitleSelectors()
       std::string token = "*:" + *it;
       if (m_settings.subtitleMode == LAVSubtitleMode_ForcedOnly || bNoLanguage) {
         tokenList.push_back(token + "|f");
-        if (m_settings.subtitleMode == LAVSubtitleMode_Default)
-          tokenList.push_back(token + "|d");
+
+        if (m_settings.PreferDefaultToVirtual) {
+          if (m_settings.subtitleMode == LAVSubtitleMode_Default)
+            tokenList.push_back(token + "|d");
+
+          tokenList.push_back(token + "|v");
+        } else {
+          tokenList.push_back(token + "|v");
+
+          if (m_settings.subtitleMode == LAVSubtitleMode_Default)
+            tokenList.push_back(token + "|d");
+        }
       } else {
         tokenList.push_back(token + "|d");
         tokenList.push_back(token + "|!h");
@@ -1429,8 +1444,18 @@ std::list<CSubtitleSelector> CLAVSplitter::GetSubtitleSelectors()
 
     // Add fallbacks (forced/default)
     tokenList.push_back("*:*|f");
-    if (m_settings.subtitleMode == LAVSubtitleMode_Default)
-      tokenList.push_back("*:*|d");
+
+    if (m_settings.PreferDefaultToVirtual) {
+      if (m_settings.subtitleMode == LAVSubtitleMode_Default)
+        tokenList.push_back("*:*|d");
+
+      tokenList.push_back("*:*|v");
+    } else {
+      tokenList.push_back("*:*|v");
+
+      if (m_settings.subtitleMode == LAVSubtitleMode_Default)
+        tokenList.push_back("*:*|d");
+    }
   } else if (m_settings.subtitleMode == LAVSubtitleMode_Advanced) {
     // Convert to multi-byte ascii
     size_t bufSize = sizeof(WCHAR) * (m_settings.subtitleAdvanced.length() + 1);
@@ -1447,7 +1472,7 @@ std::list<CSubtitleSelector> CLAVSplitter::GetSubtitleSelectors()
   // Add the "off" termination element
   tokenList.push_back("*:off");
 
-  std::tr1::regex advRegex("(?:(\\*|[[:alpha:]]+):)?(\\*|[[:alpha:]]+)(?:\\|(!?)([fdnh]+))?");
+  std::tr1::regex advRegex("(?:(\\*|[[:alpha:]]+):)?(\\*|[[:alpha:]]+)(?:\\|(!?)([fdnhv]+))?");
   std::list<std::string>::iterator it;
   for (it = tokenList.begin(); it != tokenList.end(); it++) {
     std::tr1::cmatch res;
@@ -1469,6 +1494,8 @@ std::list<CSubtitleSelector> CLAVSplitter::GetSubtitleSelectors()
           selector.dwFlags |= SUBTITLE_FLAG_NORMAL;
         if (flags.find('h') != flags.npos)
           selector.dwFlags |= SUBTITLE_FLAG_IMPAIRED;
+        if (flags.find('v') != flags.npos)
+          selector.dwFlags |= SUBTITLE_FLAG_VIRTUAL;
 
         // Check for flag negation
         std::string not = res[3];
@@ -1572,6 +1599,17 @@ STDMETHODIMP_(BOOL) CLAVSplitter::GetPGSForcedStream()
 STDMETHODIMP CLAVSplitter::SetPGSForcedStream(BOOL bFlag)
 {
   m_settings.PGSForcedStream = bFlag;
+  return SaveSettings();
+}
+
+STDMETHODIMP_(BOOL) CLAVSplitter::GetPreferDefaultToVirtual()
+{
+  return m_settings.PreferDefaultToVirtual;
+}
+
+STDMETHODIMP CLAVSplitter::SetPreferDefaultToVirtual(BOOL bFlag)
+{
+  m_settings.PreferDefaultToVirtual = bFlag;
   return SaveSettings();
 }
 

@@ -87,6 +87,12 @@ interface ILAVFSettings : public IUnknown
   // Control wether a special "Forced Subtitles" stream will be created for PGS subs
   STDMETHOD(SetPGSForcedStream)(BOOL bFlag) = 0;
 
+  // Control whether "default" streams are preferred to the special "Forced Subtitles" stream
+  STDMETHOD_(BOOL,GetPreferDefaultToVirtual)() = 0;
+
+  // Control whether "default" streams are preferred to the special "Forced Subtitles" stream
+  STDMETHOD(SetPreferDefaultToVirtual)(BOOL bFlag) = 0;
+
   // Get the PGS forced subs config
   // TRUE = only forced PGS frames will be shown, FALSE = all frames will be shown
   STDMETHOD_(BOOL,GetPGSOnlyForced)() = 0;

@@ -91,6 +91,9 @@ HRESULT CLAVSplitterSettingsProp::OnApplyChanges()
   bFlag = (BOOL)SendDlgItemMessage(m_Dlg, IDC_BD_SEPARATE_FORCED_SUBS, BM_GETCHECK, 0, 0);
   CHECK_HR(hr = m_pLAVF->SetPGSForcedStream(bFlag));
 
+  bFlag = (BOOL)SendDlgItemMessage(m_Dlg, IDC_BD_PREFER_DEFAULT_TO_VIRTUAL, BM_GETCHECK, 0, 0);
+  CHECK_HR(hr = m_pLAVF->SetPreferDefaultToVirtual(bFlag));
+
   bFlag = (BOOL)SendDlgItemMessage(m_Dlg, IDC_BD_ONLY_FORCED_SUBS, BM_GETCHECK, 0, 0);
   CHECK_HR(hr = m_pLAVF->SetPGSOnlyForced(bFlag));
 
@@ -201,6 +204,9 @@ HRESULT CLAVSplitterSettingsProp::OnActivate()
   SendDlgItemMessage(m_Dlg, IDC_BD_SEPARATE_FORCED_SUBS, BM_SETCHECK, m_PGSForcedStream, 0);
   addHint(IDC_BD_SEPARATE_FORCED_SUBS, L"Enabling this causes the creation of a new \"Forced Subtitles\" stream, which will try to always display forced subtitles matching your selected audio language.\n\nNOTE: This option may not work on all Blu-ray discs.\nRequires restart to take effect.");
 
+  SendDlgItemMessage(m_Dlg, IDC_BD_PREFER_DEFAULT_TO_VIRTUAL, BM_SETCHECK, m_PreferDefaultToVirtual, 0);
+  addHint(IDC_BD_PREFER_DEFAULT_TO_VIRTUAL, L"Enabling this will cause the splitter to prefer only real \"forced\" subtitle streams over ones marked as \"default\".\n\nCan be used in order to have the virtual \"Forced Subtitles\" stream, while not having it be selected by default at all times.");
+
   SendDlgItemMessage(m_Dlg, IDC_BD_ONLY_FORCED_SUBS, BM_SETCHECK, m_PGSOnlyForced, 0);
   addHint(IDC_BD_ONLY_FORCED_SUBS, L"When enabled, all Blu-ray (PGS) subtitles will be filtered, and only forced subtitles will be sent to the renderer.\n\nNOTE: When this option is active, you will not be able to get the \"full\" subtitles.");
 
@@ -250,6 +256,7 @@ HRESULT CLAVSplitterSettingsProp::LoadData()
   CHECK_HR(hr = m_pLAVF->GetAdvancedSubtitleConfig(&m_pszAdvSubConfig));
   m_subtitleMode = m_pLAVF->GetSubtitleMode();
   m_PGSForcedStream = m_pLAVF->GetPGSForcedStream();
+  m_PreferDefaultToVirtual = m_pLAVF->GetPreferDefaultToVirtual();
   m_PGSOnlyForced = m_pLAVF->GetPGSOnlyForced();
   m_VC1Mode = m_pLAVF->GetVC1TimestampMode();
   m_substreams = m_pLAVF->GetSubstreamsEnabled();
@@ -304,6 +311,11 @@ INT_PTR CLAVSplitterSettingsProp::OnReceiveMessage(HWND hwnd, UINT uMsg, WPARAM 
     } else if (HIWORD(wParam) == BN_CLICKED && LOWORD(wParam) == IDC_BD_SEPARATE_FORCED_SUBS) {
       BOOL bFlag = (BOOL)SendDlgItemMessage(m_Dlg, IDC_BD_SEPARATE_FORCED_SUBS, BM_GETCHECK, 0, 0);
       if (bFlag != m_PGSForcedStream) {
+        SetDirty();
+      }
+    } else if (HIWORD(wParam) == BN_CLICKED && LOWORD(wParam) == IDC_BD_PREFER_DEFAULT_TO_VIRTUAL) {
+      BOOL bFlag = (BOOL)SendDlgItemMessage(m_Dlg, IDC_BD_PREFER_DEFAULT_TO_VIRTUAL, BM_GETCHECK, 0, 0);
+      if (bFlag != m_PreferDefaultToVirtual) {
         SetDirty();
       }
     } else if (HIWORD(wParam) == BN_CLICKED && LOWORD(wParam) == IDC_BD_ONLY_FORCED_SUBS) {

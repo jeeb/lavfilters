@@ -67,6 +67,7 @@ private:
 
   LAVSubtitleMode m_subtitleMode;
   BOOL m_PGSForcedStream;
+  BOOL m_PreferDefaultToVirtual;
   BOOL m_PGSOnlyForced;
   int m_VC1Mode;
   BOOL m_substreams;

@@ -144,6 +144,8 @@ public:
   STDMETHODIMP SetSubtitleMatchingLanguage(BOOL dwMode);
   STDMETHODIMP_(BOOL) GetPGSForcedStream();
   STDMETHODIMP SetPGSForcedStream(BOOL bFlag);
+  STDMETHODIMP_(BOOL) GetPreferDefaultToVirtual();
+  STDMETHODIMP SetPreferDefaultToVirtual(BOOL bFlag);
   STDMETHODIMP_(BOOL) GetPGSOnlyForced();
   STDMETHODIMP SetPGSOnlyForced(BOOL bForced);
   STDMETHODIMP_(int) GetVC1TimestampMode();
@@ -265,6 +267,7 @@ private:
     std::wstring subtitleAdvanced;
     LAVSubtitleMode subtitleMode;
     BOOL PGSForcedStream;
+    BOOL PreferDefaultToVirtual;
     BOOL PGSOnlyForced;
     int vc1Mode;
     BOOL substreams;
