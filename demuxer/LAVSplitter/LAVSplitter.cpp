@@ -1428,9 +1428,10 @@ std::list<CSubtitleSelector> CLAVSplitter::GetSubtitleSelectors()
     }
 
     // Add fallbacks (forced/default)
-    tokenList.push_back("*:*|f");
     if (m_settings.subtitleMode == LAVSubtitleMode_Default)
       tokenList.push_back("*:*|d");
+
+    tokenList.push_back("*:*|f");
   } else if (m_settings.subtitleMode == LAVSubtitleMode_Advanced) {
     // Convert to multi-byte ascii
     size_t bufSize = sizeof(WCHAR) * (m_settings.subtitleAdvanced.length() + 1);
