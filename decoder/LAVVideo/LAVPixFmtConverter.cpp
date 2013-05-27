@@ -103,6 +103,45 @@ static LAV_INOUT_PIXFMT_MAP lav_pixfmt_map[] = {
   { LAVPixFmt_DXVA2, 8,     { PIXOUT_420_8, PIXOUT_420_10, PIXOUT_420_16, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_RGB_8, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_RGB_16 } },
 };
 
+// Re-define the 8bit 4:2:0 define in order to prefer YV12 for XP
+#undef PIXOUT_420_8
+#define PIXOUT_420_8    LAVOutPixFmt_YV12, LAVOutPixFmt_NV12
+// Define an XP pixfmt_map
+static LAV_INOUT_PIXFMT_MAP lav_pixfmt_map_xp[] = {
+  // Default
+  { LAVPixFmt_None, 8,      { PIXOUT_420_8, PIXOUT_420_10, PIXOUT_420_16, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8 } },
+
+  // 4:2:0
+  { LAVPixFmt_YUV420, 8,    { PIXOUT_420_8, PIXOUT_420_10, PIXOUT_420_16, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8 } },
+  { LAVPixFmt_NV12,   8,    { PIXOUT_420_8, PIXOUT_420_10, PIXOUT_420_16, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8 } },
+
+  { LAVPixFmt_YUV420bX, 10, { PIXOUT_420_10, PIXOUT_420_16, PIXOUT_420_8, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8 } },
+  { LAVPixFmt_YUV420bX, 16, { PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8 } },
+
+  // 4:2:2
+  { LAVPixFmt_YUV422, 8,    { PIXOUT_422_8, PIXOUT_422_10, PIXOUT_422_16, PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+  { LAVPixFmt_YUY2,   8,    { PIXOUT_422_8, PIXOUT_422_10, PIXOUT_422_16, PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+
+  { LAVPixFmt_YUV422bX, 10, { PIXOUT_422_10, PIXOUT_422_16, PIXOUT_422_8, PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+  { LAVPixFmt_YUV422bX, 16, { PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+
+  // 4:4:4
+  { LAVPixFmt_YUV444,    8, { PIXOUT_444_8, PIXOUT_444_10, PIXOUT_444_16, PIXOUT_RGB_16, PIXOUT_RGB_8, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+  { LAVPixFmt_YUV444bX, 10, { PIXOUT_444_10, PIXOUT_444_16, PIXOUT_444_8, PIXOUT_RGB_16, PIXOUT_RGB_8, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+  { LAVPixFmt_YUV444bX, 16, { PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_RGB_16, PIXOUT_RGB_8, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+
+  // RGB
+  { LAVPixFmt_RGB24,  8,    { LAVOutPixFmt_RGB24, LAVOutPixFmt_RGB32, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+  { LAVPixFmt_RGB32,  8,    { PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+  { LAVPixFmt_ARGB32, 8,    { PIXOUT_RGB_8, PIXOUT_RGB_16, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+  { LAVPixFmt_RGB48,  8,    { PIXOUT_RGB_16, PIXOUT_RGB_8, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_420_16, PIXOUT_420_10, PIXOUT_420_8 } },
+
+  { LAVPixFmt_DXVA2, 8,     { PIXOUT_420_8, PIXOUT_420_10, PIXOUT_420_16, PIXOUT_422_16, PIXOUT_422_10, PIXOUT_422_8, PIXOUT_RGB_8, PIXOUT_444_16, PIXOUT_444_10, PIXOUT_444_8, PIXOUT_RGB_16 } },
+};
+// And then re-define it after this to the default, to get things back to normal
+#undef PIXOUT_420_8
+#define PIXOUT_420_8    LAVOutPixFmt_NV12, LAVOutPixFmt_YV12
+
 LAVOutPixFmtDesc lav_pixfmt_desc[] = {
   { MEDIASUBTYPE_YV12,  12, 1, 3, { 1, 2, 2 }, { 1, 2, 2 } },        // YV12
   { MEDIASUBTYPE_NV12,  12, 1, 2, { 1, 2 }, { 1, 1 } },              // NV12
@@ -126,13 +165,23 @@ LAVOutPixFmtDesc lav_pixfmt_desc[] = {
 
 static LAV_INOUT_PIXFMT_MAP *lookupFormatMap(LAVPixelFormat informat, int bpp, BOOL bFallbackToDefault = TRUE)
 {
-  for (int i = 0; i < countof(lav_pixfmt_map); ++i) {
-    if (lav_pixfmt_map[i].in_pix_fmt == informat && bpp <= lav_pixfmt_map[i].maxbpp) {
-      return &lav_pixfmt_map[i];
+  if (!IsVistaOrNewer()) {
+    for (int i = 0; i < countof(lav_pixfmt_map_xp); ++i) {
+      if (lav_pixfmt_map_xp[i].in_pix_fmt == informat && bpp <= lav_pixfmt_map_xp[i].maxbpp) {
+        return &lav_pixfmt_map_xp[i];
+      }
     }
+    if (bFallbackToDefault)
+      return &lav_pixfmt_map_xp[0];
+  } else {
+    for (int i = 0; i < countof(lav_pixfmt_map); ++i) {
+      if (lav_pixfmt_map[i].in_pix_fmt == informat && bpp <= lav_pixfmt_map[i].maxbpp) {
+        return &lav_pixfmt_map[i];
+      }
+    }
+    if (bFallbackToDefault)
+      return &lav_pixfmt_map[0];
   }
-  if (bFallbackToDefault)
-    return &lav_pixfmt_map[0];
   return nullptr;
 }
 
@@ -190,7 +239,12 @@ LAVOutPixFmts CLAVPixFmtConverter::GetFilteredFormat(int index)
   // If no format is enabled, we use the fallback formats to avoid catastrophic failure
   if (index >= LAVOutPixFmt_NB)
     index = 0;
-  return lav_pixfmt_map[0].lav_pix_fmts[index];
+
+  if (!IsVistaOrNewer()) {
+    return lav_pixfmt_map_xp[0].lav_pix_fmts[index];
+  } else {
+    return lav_pixfmt_map[0].lav_pix_fmts[index];
+  }
 }
 
 LAVOutPixFmts CLAVPixFmtConverter::GetPreferredOutput()
