@@ -90,8 +90,7 @@ CLAVSplitter::~CLAVSplitter()
 {
   SAFE_DELETE(m_pInput);
   if (m_pTrayIcon) {
-    m_pTrayIcon->Destroy();
-    m_pTrayIcon = NULL;
+    SAFE_DELETE(m_pTrayIcon);
   }
   Close();
 
@@ -140,8 +139,7 @@ STDMETHODIMP CLAVSplitter::JoinFilterGraph(IFilterGraph * pGraph, LPCWSTR pName)
   if (pGraph && !m_pTrayIcon && m_settings.TrayIcon) {
     CreateTrayIcon();
   } else if (!pGraph && m_pTrayIcon) {
-    m_pTrayIcon->Destroy();
-    m_pTrayIcon = NULL;
+    SAFE_DELETE(m_pTrayIcon);
   }
   return hr;
 }
@@ -1526,8 +1524,7 @@ HRESULT CLAVSplitter::SetRuntimeConfig(BOOL bRuntimeConfig)
 
   // Tray Icon is disabled by default
   if (m_pTrayIcon) {
-    m_pTrayIcon->Destroy();
-    m_pTrayIcon = NULL;
+    SAFE_DELETE(m_pTrayIcon);
   }
 
   return S_OK;
@@ -1750,8 +1747,7 @@ STDMETHODIMP CLAVSplitter::SetTrayIcon(BOOL bEnabled)
   m_settings.TrayIcon = bEnabled;
   if (!bEnabled && m_pTrayIcon) {
     if (m_pTrayIcon) {
-      m_pTrayIcon->Destroy();
-      m_pTrayIcon = NULL;
+      SAFE_DELETE(m_pTrayIcon);
     }
   } else if (bEnabled && m_pGraph && !m_pTrayIcon) {
     CreateTrayIcon();
