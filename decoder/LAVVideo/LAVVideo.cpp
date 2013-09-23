@@ -913,6 +913,33 @@ HRESULT CLAVVideo::GetDeliveryBuffer(IMediaSample** ppOut, int width, int height
   return S_OK;
 }
 
+BOOL CLAVVideo::ConnectedToWhitelistedFilter()
+{
+  GUID clsid;
+  HRESULT hr;
+
+  // The whitelist for the colorimetry
+  static const GUID whitelist[] = {
+    CLSID_VSFilter,
+    CLSID_VSFilter_no_autoload,
+    CLSID_VideoMixingRenderer,
+    CLSID_VideoMixingRenderer9,
+    CLSID_EnhancedVideoRenderer,
+    CLSID_madVR
+  };
+
+  hr = getConnectedFilterCLSID(clsid);
+
+  if (SUCCEEDED(hr)) {
+    for (int i = 0; i < countof(whitelist); ++i) {
+      if (clsid == whitelist[i])
+        return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
 HRESULT CLAVVideo::ReconnectOutput(int width, int height, AVRational ar, DXVA2_ExtendedFormat dxvaExtFlags, REFERENCE_TIME avgFrameDuration, BOOL bDXVA)
 {
   CMediaType mt = m_pOutput->CurrentMediaType();
@@ -943,9 +970,10 @@ HRESULT CLAVVideo::ReconnectOutput(int width, int height, AVRational ar, DXVA2_E
   if (m_bOverlayMixer == -1)
     m_bOverlayMixer = !m_bMadVR && FilterInGraph(PINDIR_OUTPUT, CLSID_OverlayMixer);
 
-  // Only madVR really knows how to deal with these flags, disable them for everyone else
+  // Only certain filters can handle these flags, thus they are limited to a whitelist
+  // of filters
   if (m_bDXVAExtFormatSupport == -1)
-    m_bDXVAExtFormatSupport = m_bMadVR;
+    m_bDXVAExtFormatSupport = ConnectedToWhitelistedFilter();
 
   // Determine Interlaced flags
   // - madVR handles the flags properly, so properly indicate forced deint, adaptive deint and progressive
