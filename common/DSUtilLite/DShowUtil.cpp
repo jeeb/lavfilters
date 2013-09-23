@@ -638,3 +638,31 @@ BOOL IsVistaOrNewer()
 
   return (os.dwMajorVersion >= 6);
 }
+
+// pPin  - pin of our filter
+// clsid - the CLSID of the filter connected to our filter
+HRESULT getConnectedFilterCLSIDSafe(IPin *pPin, GUID &clsid)
+{
+  CheckPointer(pPin, E_POINTER);
+  HRESULT hr;
+
+  IPin *pOtherPin;
+  hr = pPin->ConnectedTo(&pOtherPin);
+
+  if (SUCCEEDED(hr) && pOtherPin) {
+    IBaseFilter *pFilter = GetFilterFromPin(pOtherPin);
+
+    if (pFilter) {
+      hr = pFilter->GetClassID(&clsid);
+      SafeRelease(&pFilter);
+    } else {
+      hr = E_FAIL;
+    }
+
+    SafeRelease(&pOtherPin);
+  } else { // because if we succeed and the pointer is NULL we would otherwise succeed
+    hr = E_FAIL;
+  }
+
+  return hr;
+}
