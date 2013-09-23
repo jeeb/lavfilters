@@ -405,6 +405,37 @@ HRESULT FindFilterSafe(IPin *pPin, const GUID &guid, IBaseFilter **ppFilter, BOO
 
 // pPin - pin of our filter to start searching
 // guid - guid of the filter to find
+BOOL FilterNextInGraphSafe(IPin *pPin, const GUID &guid)
+{
+  CheckPointer(pPin, E_POINTER);
+  HRESULT hr = S_OK;
+
+  // Try checking if pin is connected to something
+  IPin *pOtherPin = NULL;
+  hr = pPin->ConnectedTo(&pOtherPin);
+
+  // We have the pin of the other filter
+  if (SUCCEEDED(hr) && pOtherPin) {
+    IBaseFilter *pFilter = GetFilterFromPin(pOtherPin);
+    SafeRelease(&pOtherPin);
+
+    // Check the filter's GUID
+    CLSID filterGUID;
+    if (SUCCEEDED(pFilter->GetClassID(&filterGUID)) && filterGUID == guid) {
+      SafeRelease(&pFilter);
+      return TRUE;
+    } else { // Failed to get the filter's GUID
+      SafeRelease(&pFilter);
+      return FALSE;
+    }
+  } else { // Checking the connection failed in one way or another
+    SafeRelease(&pOtherPin);
+    return FALSE;
+  }
+}
+
+// pPin - pin of our filter to start searching
+// guid - guid of the filter to find
 // ppFilter - variable that'll receive a AddRef'd reference to the filter
 BOOL HasSourceWithType(IPin *pPin, const GUID &mediaType)
 {

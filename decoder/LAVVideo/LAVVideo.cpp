@@ -943,7 +943,7 @@ HRESULT CLAVVideo::ReconnectOutput(int width, int height, AVRational ar, DXVA2_E
 
   // Only madVR really knows how to deal with these flags, disable them for everyone else
   if (m_bDXVAExtFormatSupport == -1)
-    m_bDXVAExtFormatSupport = m_bMadVR;
+    m_bDXVAExtFormatSupport = !FilterNextInGraph(CLSID_OverlayMixer);
 
   // Determine Interlaced flags
   // - madVR handles the flags properly, so properly indicate forced deint, adaptive deint and progressive
