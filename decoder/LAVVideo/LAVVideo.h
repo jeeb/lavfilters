@@ -177,6 +177,7 @@ public:
   STDMETHODIMP Deliver(LAVFrame *pFrame);
   STDMETHODIMP_(LPWSTR) GetFileExtension();
   STDMETHODIMP_(BOOL) FilterInGraph(PIN_DIRECTION dir, const GUID &clsid) { if (dir == PINDIR_INPUT) return FilterInGraphSafe(m_pInput, clsid); else return FilterInGraphSafe(m_pOutput, clsid); }
+  STDMETHODIMP_(HRESULT) getConnectedFilterCLSID(GUID &clsid) { return getConnectedFilterCLSIDSafe(m_pOutput, clsid); }
   STDMETHODIMP_(DWORD) GetDecodeFlags() { return m_dwDecodeFlags; }
   STDMETHODIMP_(CMediaType&) GetInputMediaType() { return m_pInput->CurrentMediaType(); }
   STDMETHODIMP GetLAVPinInfo(LAVPinInfo &info) { if (m_LAVPinInfoValid) { info = m_LAVPinInfo; return S_OK; } return E_FAIL; }
@@ -230,6 +231,8 @@ private:
   HRESULT GetD3DBuffer(LAVFrame *pFrame);
   HRESULT RedrawStillImage();
   HRESULT SetInDVDMenu(bool menu) { m_bInDVDMenu = menu; return S_OK; }
+
+  BOOL ConnectedToWhitelistedFilter();
 
 private:
   friend class CVideoInputPin;
