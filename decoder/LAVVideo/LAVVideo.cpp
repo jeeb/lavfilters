@@ -886,6 +886,29 @@ HRESULT CLAVVideo::GetDeliveryBuffer(IMediaSample** ppOut, int width, int height
   return S_OK;
 }
 
+BOOL CLAVVideo::ConnectedToWhitelistedFilter()
+{
+  GUID clsid;
+  HRESULT hr;
+
+  // The whitelist for the colorimetry
+  static const GUID whitelist[] = {
+    CLSID_VSFilter,
+    CLSID_VSFilter_no_autoload
+  };
+
+  hr = getConnectedFilterCLSID(clsid);
+
+  if (SUCCEEDED(hr)) {
+    for (int i = 0; i < countof(whitelist); ++i) {
+      if (clsid == whitelist[i])
+        return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
 HRESULT CLAVVideo::ReconnectOutput(int width, int height, AVRational ar, DXVA2_ExtendedFormat dxvaExtFlags, REFERENCE_TIME avgFrameDuration, BOOL bDXVA)
 {
   CMediaType mt = m_pOutput->CurrentMediaType();
@@ -909,7 +932,8 @@ HRESULT CLAVVideo::ReconnectOutput(int width, int height, AVRational ar, DXVA2_E
 
   if (m_bOverlayMixer == -1) {
     m_bOverlayMixer = !m_bMadVR && FilterInGraph(PINDIR_OUTPUT, CLSID_OverlayMixer);
-    if (m_bOverlayMixer)
+    // Disable colorimetry with overlay and the next filter not being a whitelisted one
+    if (m_bOverlayMixer && !ConnectedToWhitelistedFilter())
       m_bDXVAExtFormatSupport = 0;
   }
 
