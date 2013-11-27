@@ -660,3 +660,29 @@ void __cdecl debugprintf(LPCWSTR format, ...)
 
   OutputDebugString(buf);
 }
+
+// pPin  - pin of our filter
+// clsid - the CLSID of the filter connected to our filter
+HRESULT getConnectedFilterCLSIDSafe(IPin *pPin, GUID &clsid)
+{
+  CheckPointer(pPin, E_POINTER);
+  HRESULT hr;
+
+  IPin *pOtherPin;
+  hr = pPin->ConnectedTo(&pOtherPin);
+
+  if (SUCCEEDED(hr)) {
+    IBaseFilter *pFilter = GetFilterFromPin(pOtherPin);
+
+    if (pFilter) {
+      hr = pFilter->GetClassID(&clsid);
+      SafeRelease(&pFilter);
+    } else {
+      hr = E_FAIL;
+    }
+
+    SafeRelease(&pOtherPin);
+  }
+
+  return hr;
+}
