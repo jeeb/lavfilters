@@ -1197,8 +1197,8 @@ HRESULT CLAVAudio::ffmpeg_init(AVCodecID codec, const void *format, const GUID f
   DbgLog((LOG_TRACE, 10, L"-> Do we have video? %d", m_bHasVideo));
 
   // If the codec is bitstreaming, and enabled for it, go there now
+  WAVEFORMATEX *wfe = (format_type == FORMAT_WaveFormatEx) ? (WAVEFORMATEX *)format : nullptr;
   if (IsBitstreaming(codec)) {
-    WAVEFORMATEX *wfe = (format_type == FORMAT_WaveFormatEx) ? (WAVEFORMATEX *)format : nullptr;
     if(SUCCEEDED(CreateBitstreamContext(codec, wfe))) {
       return S_OK;
     }
@@ -1258,6 +1258,13 @@ HRESULT CLAVAudio::ffmpeg_init(AVCodecID codec, const void *format, const GUID f
   m_pAVCtx->refcounted_frames     = 1;
   m_pAVCtx->pkt_timebase.num      = 1;
   m_pAVCtx->pkt_timebase.den      = 10000000;
+
+  // Some audio formats actually need the channel layout to initialize,
+  // so we use it if it is available
+  if (wfe && wfe->wFormatTag == WAVE_FORMAT_EXTENSIBLE) {
+    WAVEFORMATEXTENSIBLE *wfextensible = (WAVEFORMATEXTENSIBLE *)wfe;
+    m_pAVCtx->channel_layout = wfextensible->dwChannelMask;
+  }
 
   memset(&m_raData, 0, sizeof(m_raData));
 
