@@ -150,6 +150,37 @@ WAVEFORMATEX *CLAVFAudioHelper::CreateWVFMTEX(const AVStream *avstream, ULONG *s
   return wvfmt;
 }
 
+WAVEFORMATEX *CLAVFAudioHelper::CreateWVFMTEXTENSIBLE(const AVStream *avstream, ULONG *size) {
+  WAVEFORMATEX *wvfmt = CreateWVFMTEX(avstream, size);
+  if (!wvfmt)
+    return nullptr;
+
+  const size_t diff_size = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
+  WAVEFORMATEXTENSIBLE *wvfmtex = (WAVEFORMATEXTENSIBLE *)CoTaskMemAlloc(diff_size + *size);
+  if (!wvfmtex)
+    return nullptr;
+
+  memset(wvfmtex, 0, sizeof(diff_size + *size));
+  memcpy(&wvfmtex->Format, wvfmt, sizeof(WAVEFORMATEX));
+
+  // Modify the values that have to be modified from WAVEFORMATEX
+  wvfmtex->Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+  wvfmtex->Format.cbSize     = diff_size + avstream->codec->extradata_size;
+
+  // Set the actual WAVEFORMATEXTENSIBLE values
+  wvfmtex->Samples.wValidBitsPerSample = wvfmtex->Format.wBitsPerSample;
+  wvfmtex->Samples.wSamplesPerBlock    = 0;
+  wvfmtex->dwChannelMask               = (DWORD)avstream->codec->channel_layout;
+  wvfmtex->SubFormat                   = FOURCCMap(avstream->codec->codec_tag);
+
+  memcpy(wvfmtex + sizeof(WAVEFORMATEXTENSIBLE), avstream->codec->extradata, avstream->codec->extradata_size);
+
+  CoTaskMemFree(wvfmt);
+
+  *size = sizeof(WAVEFORMATEXTENSIBLE) + avstream->codec->extradata_size;
+  return &wvfmtex->Format;
+}
+
 WAVEFORMATEXFFMPEG *CLAVFAudioHelper::CreateWVFMTEX_FF(const AVStream *avstream, ULONG *size) {
   WAVEFORMATEX *wvfmt = CreateWVFMTEX(avstream, size);
   if (!wvfmt)

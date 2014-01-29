@@ -70,6 +70,7 @@ public:
   CMediaType initAudioType(AVCodecID codecId, unsigned int &codecTag, std::string container);
 
   WAVEFORMATEX *CreateWVFMTEX(const AVStream *avstream, ULONG *size);
+  WAVEFORMATEX *CLAVFAudioHelper::CreateWVFMTEXTENSIBLE(const AVStream *avstream, ULONG *size);
   WAVEFORMATEXFFMPEG *CreateWVFMTEX_FF(const AVStream *avstream, ULONG *size);
   WAVEFORMATEX_HDMV_LPCM *CreateWVFMTEX_LPCM(const AVStream *avstream, ULONG *size);
   WAVEFORMATEXTENSIBLE *CreateWFMTEX_RAW_PCM(const AVStream *avstream, ULONG *size, const GUID subtype, ULONG *samplesize);

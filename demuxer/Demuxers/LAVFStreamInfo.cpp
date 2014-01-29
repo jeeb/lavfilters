@@ -90,7 +90,13 @@ STDMETHODIMP CLAVFStreamInfo::CreateAudioMediaType(AVFormatContext *avctx, AVStr
       // Create raw PCM media type
       mtype.pbFormat = (BYTE *)g_AudioHelper.CreateWFMTEX_RAW_PCM(avstream, &mtype.cbFormat, mtype.subtype, &mtype.lSampleSize);
     } else {
-      WAVEFORMATEX *wvfmt = g_AudioHelper.CreateWVFMTEX(avstream, &mtype.cbFormat);
+      WAVEFORMATEX *wvfmt = nullptr;
+
+      if (avstream->codec->channel_layout) {
+        wvfmt = g_AudioHelper.CreateWVFMTEXTENSIBLE(avstream, &mtype.cbFormat);
+      } else {
+        wvfmt = g_AudioHelper.CreateWVFMTEX(avstream, &mtype.cbFormat);
+      }
 
       if (avstream->codec->codec_tag == WAVE_FORMAT_EXTENSIBLE && avstream->codec->extradata_size >= 22) {
         // The WAVEFORMATEXTENSIBLE GUID is not recognized by the audio renderers
