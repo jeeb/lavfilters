@@ -40,7 +40,12 @@ extern "C" {
 #include "libavutil/mastering_display_metadata.h"
 };
 
+#if defined(_WIN64)
+#define LAVC_VIDEO_REGISTRY_KEY L"Software\\LAV64\\Video"
+#else
 #define LAVC_VIDEO_REGISTRY_KEY L"Software\\LAV\\Video"
+#endif
+
 #define LAVC_VIDEO_REGISTRY_KEY_FORMATS LAVC_VIDEO_REGISTRY_KEY L"\\Formats"
 #define LAVC_VIDEO_REGISTRY_KEY_OUTPUT LAVC_VIDEO_REGISTRY_KEY L"\\Output"
 #define LAVC_VIDEO_REGISTRY_KEY_HWACCEL LAVC_VIDEO_REGISTRY_KEY L"\\HWAccel"
