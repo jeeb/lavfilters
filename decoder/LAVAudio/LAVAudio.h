@@ -51,7 +51,12 @@
 #define AV_CODEC_ID_PCM_UxxLE (AVCodecID)0x19004
 #define AV_CODEC_ID_PCM_QTRAW (AVCodecID)0x19005
 
+#if defined(_WIN64)
+#define LAVC_AUDIO_REGISTRY_KEY L"Software\\LAV64\\Audio"
+#else
 #define LAVC_AUDIO_REGISTRY_KEY L"Software\\LAV\\Audio"
+#endif
+
 #define LAVC_AUDIO_REGISTRY_KEY_FORMATS LAVC_AUDIO_REGISTRY_KEY L"\\Formats"
 #define LAVC_AUDIO_LOG_FILE     L"LAVAudio.txt"
 
