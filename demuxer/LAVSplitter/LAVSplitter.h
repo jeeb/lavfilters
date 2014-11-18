@@ -39,7 +39,12 @@
 
 #include "LAVSplitterTrayIcon.h"
 
+#if defined(_WIN64)
+#define LAVF_REGISTRY_KEY L"Software\\LAV64\\Splitter"
+#else
 #define LAVF_REGISTRY_KEY L"Software\\LAV\\Splitter"
+#endif
+
 #define LAVF_REGISTRY_KEY_FORMATS LAVF_REGISTRY_KEY L"\\Formats"
 #define LAVF_LOG_FILE     L"LAVSplitter.txt"
 
